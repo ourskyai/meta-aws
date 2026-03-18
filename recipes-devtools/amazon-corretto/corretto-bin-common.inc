@@ -107,5 +107,23 @@ python do_package:prepend () {
 
 ALTERNATIVE:${PN} = "${ALTERNATIVE_NAMES}"
 
-# nooelint: oelint.vars.insaneskip
-INSANE_SKIP:${PN} += "already-stripped"
+PACKAGES =+ "${PN}-jre"
+
+FILES:${PN}-jre = " \
+    ${libdir}/${SHR}/lib \
+    ${libdir}/${SHR}/conf \
+    ${libdir}/${SHR}/legal \
+    ${libdir}/${SHR}/release \
+    ${libdir}/${SHR}/LICENSE \
+    ${bindir}/java \
+    ${bindir}/keytool \
+"
+
+RDEPENDS:${PN} += "${PN}-jre"
+RDEPENDS:${PN}-jre += " \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'alsa', 'alsa-lib', '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'libx11 libxext libxi libxrender libxtst ', '', d)} \
+    zlib \
+"
+
+INSANE_SKIP:${PN}-jre += "libdir"
