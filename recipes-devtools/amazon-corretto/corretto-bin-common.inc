@@ -26,6 +26,8 @@ FILES:${PN} += "\
     "
 
 FILES:${PN}-jre = " \
+    ${libdir}/${SHR}/bin/java \
+    ${libdir}/${SHR}/bin/keytool \
     ${libdir}/${SHR}/lib \
     ${libdir}/${SHR}/conf \
     ${libdir}/${SHR}/legal \
@@ -125,6 +127,7 @@ python do_package:prepend () {
 }
 
 ALTERNATIVE:${PN} = "${ALTERNATIVE_NAMES}"
+ALTERNATIVE:${PN}-jre = "java keytool"
 
 # nooelint: oelint.vars.insaneskip
 INSANE_SKIP:${PN} += "already-stripped"
