@@ -18,10 +18,22 @@ SRC_URI:append = " file://run-ptest"
 
 S = "${WORKDIR}/${BASE}"
 
+PACKAGES =+ "${PN}-jre"
+
 FILES:${PN} += "\
     /usr/lib/${SHR} \
     /usr/bin \
     "
+
+FILES:${PN}-jre = " \
+    ${libdir}/${SHR}/lib \
+    ${libdir}/${SHR}/conf \
+    ${libdir}/${SHR}/legal \
+    ${libdir}/${SHR}/release \
+    ${libdir}/${SHR}/LICENSE \
+    ${bindir}/java \
+    ${bindir}/keytool \
+"
 
 do_install() {
     install -d ${D}${bindir}
@@ -54,6 +66,14 @@ RDEPENDS:${PN} += "\
     ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'libx11 libxext libxi libxrender libxtst ', '', d)} \
     zlib \
 "
+
+RDEPENDS:${PN} += "${PN}-jre"
+RDEPENDS:${PN}-jre += " \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'alsa', 'alsa-lib', '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'libx11 libxext libxi libxrender libxtst ', '', d)} \
+    zlib \
+"
+
 
 do_install:append() {
     if ${@bb.utils.contains('DISTRO_FEATURES','x11','false','true',d)}; then
@@ -104,29 +124,8 @@ python do_package:prepend () {
         d.appendVar("ALTERNATIVE_PRIORITY_VARDEPS", ' ' + alt_name + ':' + prio)
 }
 
-
 ALTERNATIVE:${PN} = "${ALTERNATIVE_NAMES}"
 
 # nooelint: oelint.vars.insaneskip
 INSANE_SKIP:${PN} += "already-stripped"
-
-PACKAGES =+ "${PN}-jre"
-
-FILES:${PN}-jre = " \
-    ${libdir}/${SHR}/lib \
-    ${libdir}/${SHR}/conf \
-    ${libdir}/${SHR}/legal \
-    ${libdir}/${SHR}/release \
-    ${libdir}/${SHR}/LICENSE \
-    ${bindir}/java \
-    ${bindir}/keytool \
-"
-
-RDEPENDS:${PN} += "${PN}-jre"
-RDEPENDS:${PN}-jre += " \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'alsa', 'alsa-lib', '', d)} \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'libx11 libxext libxi libxrender libxtst ', '', d)} \
-    zlib \
-"
-
 INSANE_SKIP:${PN}-jre += "libdir"
