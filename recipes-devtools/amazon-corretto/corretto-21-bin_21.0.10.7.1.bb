@@ -18,6 +18,7 @@ UPSTREAM_CHECK_URI = "https://github.com/corretto/corretto-21/tags"
 
 ALTERNATIVE_PRIORITY = "80"
 RPROVIDES:${PN} = "java jdk-21 java-21"
+RPROVIDES:${PN}-jre = "java-21-jre"
 
 # nooelint: oelint.file.underscores
 require corretto-bin-common.inc
